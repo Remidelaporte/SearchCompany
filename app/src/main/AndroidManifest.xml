@@ -12,9 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SearchCompany">
-        <activity android:name=".CompanyActivity"></activity>
-        <activity android:name=".CompanyListActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".CompanyActivity"
+            android:label="company"></activity>
+        <activity android:name=".MainActivity"
+            android:label="Search">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

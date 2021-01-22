@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SearchCompany</string>
+    <string name="ETsearchhint">Nom de la compagnie</string>
+    <string name="BTsearch">Rechercher</string>
 </resources>
