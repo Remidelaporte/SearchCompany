@@ -8,7 +8,7 @@ import javax.net.ssl.HttpsURLConnection
 
 class SearchService() {
     private val apiUrl="https://entreprise.data.gouv.fr/api/sirene/v1/full_text"
-    private val queryURL="$apiUrl/%?page=1&per_page=10"
+    private val queryURL="$apiUrl/%s?page=1&per_page=10"
 
     fun getCompagny(query:String):List<Company>{
         val url= URL(String.format(queryURL,query))
@@ -32,6 +32,7 @@ class SearchService() {
             reader.beginObject()
             while (reader.hasNext()){
                 var firstsuivant=reader.nextName()
+                println(firstsuivant)
                 if (firstsuivant=="etablissement")
                 {
                     reader.beginArray()
@@ -54,6 +55,11 @@ class SearchService() {
                     }
                     return result
                 }
+                else
+                {
+                    reader.skipValue()
+                }
+
             }
             return emptyList()
             return result
