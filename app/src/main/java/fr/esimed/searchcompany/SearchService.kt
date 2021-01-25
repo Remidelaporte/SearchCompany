@@ -67,7 +67,17 @@ class SearchService(context: Context) {
                             when(reader.nextName()){
                                 "nom_raison_sociale"->nom=reader.nextString().toString()
                                 "geo_adresse"->addr=reader.nextString().toString()
-                                "departement"->depart=reader.nextInt().toInt()
+                              "departement"->{
+                                    if(reader.nextInt()!=null)
+                                    {
+                                        depart=reader.nextInt()
+                                    }
+                                    else
+                                    {
+                                        depart=0
+                                    }
+
+                                }
                                 "libelle_activite_principale"->activ=reader.nextString().toString()
                                 "siret"->siret=reader.nextString().toString()
                                 else->reader.skipValue()
