@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     inner class QueryTask():AsyncTask<Void,Void,Boolean>(){
-        val searchservice=SearchService()
+        val searchservice=SearchService(this@MainActivity)
         var liste= emptyList<Company>()
         var listView=findViewById<ListView>(R.id.LVcompanyList)
         override fun doInBackground(vararg params: Void?): Boolean {

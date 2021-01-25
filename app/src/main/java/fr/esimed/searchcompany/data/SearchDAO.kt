@@ -6,7 +6,7 @@ import fr.esimed.searchcompany.data.model.Search
 @Dao
 interface SearchDAO {
     @Insert
-    fun insert(search:Search):Int
+    fun insert(search:Search):Long
     @Update
     fun update(search: Search)
     @Delete

@@ -10,7 +10,7 @@ import fr.esimed.searchcompany.data.model.Search
 @Dao
 interface CompanyDAO {
     @Insert
-    fun insert(company: Company):Int
+    fun insert(company: Company):Long
     @Update
     fun update(company: Company)
     @Delete

@@ -5,7 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value=["id"],unique = true)])
-class Search(@PrimaryKey(autoGenerate = true)var id:Int?=null,var query:String,var URL:String,var date:String) {
+class Search(@PrimaryKey(autoGenerate = true)var id:Long?=null,var query:String,var URL:String,var date:String) {
     override fun equals(other: Any?): Boolean {
         if(this===other)return true
         if (javaClass!= other?.javaClass)return false

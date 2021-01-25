@@ -10,7 +10,7 @@ import fr.esimed.searchcompany.data.model.Search
 @Dao
 interface KCSDAO {
     @Insert
-    fun insert(kcs:KeyCompanySearch):Int
+    fun insert(kcs:KeyCompanySearch):Long
     @Update
     fun update(kcs:KeyCompanySearch)
     @Delete

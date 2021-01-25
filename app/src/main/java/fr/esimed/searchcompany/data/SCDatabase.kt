@@ -4,17 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import fr.esimed.searchcompany.SearchService
 import fr.esimed.searchcompany.data.model.Company
 import fr.esimed.searchcompany.data.model.KeyCompanySearch
 import fr.esimed.searchcompany.data.model.Search
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Database(version =1 , entities = [Search::class,KeyCompanySearch::class,Company::class])
 abstract class SCDatabase: RoomDatabase() {
-    abstract fun searchDao(): SearchDAO
-    abstract fun companyDao():CompanyDAO
+    abstract fun searchDAO(): SearchDAO
+    abstract fun companyDAO():CompanyDAO
     abstract fun kcsDAO():KCSDAO
 
 
@@ -25,7 +24,7 @@ abstract class SCDatabase: RoomDatabase() {
             if (INSTANCE == null)
             {
                 INSTANCE = Room
-                    .databaseBuilder(context, SCDatabase::class.java,"speeddating.db")
+                    .databaseBuilder(context, SCDatabase::class.java,"searchcompany.db")
                     .allowMainThreadQueries()
                     .build()
                 //verifier Instance !=null
