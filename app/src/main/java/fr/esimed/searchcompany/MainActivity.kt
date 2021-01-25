@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
-import fr.esimed.searchcompany.data.Company
+import fr.esimed.searchcompany.data.model.Company
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

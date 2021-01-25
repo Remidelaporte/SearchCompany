@@ -1,7 +1,7 @@
 package fr.esimed.searchcompany
 
 import android.util.JsonReader
-import fr.esimed.searchcompany.data.Company
+import fr.esimed.searchcompany.data.model.Company
 import java.io.IOException
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
@@ -62,7 +62,6 @@ class SearchService() {
 
             }
             return emptyList()
-            return result
         }catch (e:IOException){
             return emptyList()
         }finally {
