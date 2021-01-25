@@ -18,7 +18,7 @@ class SearchService(context: Context) {
     private val queryURL="$apiUrl/%s?page=1&per_page=10"
     private val context=context
 
-    fun getCompagny(query:String):List<Company>{
+    fun getCompagny(query:String):Long{
         val db=SCDatabase.getDatabase(context)
         val searchDAO=db.searchDAO()
         val companyDAO=db.companyDAO()
@@ -27,22 +27,29 @@ class SearchService(context: Context) {
         val c = Calendar.getInstance()
         val date = sdf.format(c.time).toString()
         val url= URL(String.format(queryURL,query))
+        println("searchdaoglanum")
+        println(searchDAO.getIdifalready(url.toString()))
+        var ifalready=searchDAO.getIdifalready(url.toString())
+        if(ifalready!=0.toLong())
+        {
+            return ifalready
+        }
         var conn:HttpsURLConnection?=null
-        val result= mutableListOf<Company>()
         var nom=""
         var addr=""
         var depart=0
         var activ=""
         var siret=""
         try {
+            println("entré dans apiglanu")
             conn=url.openConnection()as HttpsURLConnection
             conn.connect()
             val code=conn.responseCode
             if (code!=HttpsURLConnection.HTTP_OK)
             {
-                return emptyList()
+                return 0.toLong()
             }
-            val inputStream=conn.inputStream?:return emptyList()
+            val inputStream=conn.inputStream?:return 0.toLong()
             val reader=JsonReader(inputStream.bufferedReader())
             var idsearch=searchDAO.insert(Search(null,query,url.toString(),date))
             reader.beginObject()
@@ -66,12 +73,20 @@ class SearchService(context: Context) {
                                 else->reader.skipValue()
                             }
                         }
-                        println(Company(null,nom,depart,addr,activ,siret))
-                        var idcompany=companyDAO.insert(Company(null,nom,depart,addr,activ,siret))
+                        println(Company(null,nom,depart,addr,activ,siret,date))
+                        var result=companyDAO.getCompanybysiret(siret)
+                        var idcompany=0.toLong()
+                        if (result==0.toLong())
+                        {
+                            idcompany=companyDAO.insert(Company(null,nom,depart,addr,activ,siret,date))
+                        }
+                        else{
+                            idcompany=result
+                        }
                         kcsdao.insert(KeyCompanySearch(idsearch,idcompany))
                         reader.endObject()
                     }
-                    return result
+                    return idsearch
                 }
                 else
                 {
@@ -79,9 +94,9 @@ class SearchService(context: Context) {
                 }
 
             }
-            return emptyList()
+            return 0.toLong()
         }catch (e:IOException){
-            return emptyList()
+            return 0.toLong()
         }finally {
             conn?.disconnect()
         }

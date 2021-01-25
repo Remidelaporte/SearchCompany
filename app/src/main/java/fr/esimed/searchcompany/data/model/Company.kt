@@ -5,7 +5,14 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.io.Serializable
 @Entity(indices=[Index(value = ["id"],unique = true)])
-class Company(@PrimaryKey(autoGenerate = true)var id:Long?,var libelle:String, var depart:Int, var adress:String, var activity:String, var siret:String):Serializable {
+class Company(@PrimaryKey(autoGenerate = true)var id:Long?,
+              var libelle:String,
+              var depart:Int,
+              var adress:String,
+              var activity:String,
+              var siret:String,
+              var date:String,
+              var archive:Boolean=false):Serializable {
 
     override fun equals(other: Any?): Boolean {
         if(this===other)return true
