@@ -66,8 +66,10 @@ class SearchService(context: Context) {
                                 else->reader.skipValue()
                             }
                         }
+                        println(Company(null,nom,depart,addr,activ,siret))
                         var idcompany=companyDAO.insert(Company(null,nom,depart,addr,activ,siret))
                         kcsdao.insert(KeyCompanySearch(idsearch,idcompany))
+                        reader.endObject()
                     }
                     return result
                 }
