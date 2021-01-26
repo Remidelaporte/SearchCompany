@@ -6,10 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
+import android.widget.*
 import fr.esimed.searchcompany.data.SCDatabase
 import fr.esimed.searchcompany.data.model.Company
 import java.text.SimpleDateFormat
@@ -21,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         val db= SCDatabase.getDatabase(this@MainActivity)
         db.seed()
         setContentView(R.layout.activity_main)
-        findViewById<Button>(R.id.BTsearch).setOnClickListener {
+        findViewById<ImageButton>(R.id.BTsearch).setOnClickListener {
             QueryTask().execute()
         }
         val listView=findViewById<ListView>(R.id.LVcompanyList)
@@ -78,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         val companyDAO=db.companyDAO()
         val kcsdao=db.kcsDAO()
         override fun doInBackground(vararg params: Void?): Boolean {
-            idSearch=searchservice.getCompagny(findViewById<EditText>(R.id.ETsearchName).text.toString())
+            idSearch=searchservice.getCompagny(findViewById<EditText>(R.id.ETsearchName).text.toString(),findViewById<EditText>(R.id.ETcode).text.toString())
             return true
         }
 

@@ -2,6 +2,7 @@ package fr.esimed.searchcompany
 
 import android.content.Context
 import android.util.JsonReader
+import android.util.JsonToken
 import fr.esimed.searchcompany.data.SCDatabase
 import fr.esimed.searchcompany.data.SearchDAO
 import fr.esimed.searchcompany.data.model.Company
@@ -15,10 +16,13 @@ import javax.net.ssl.HttpsURLConnection
 
 class SearchService(context: Context) {
     private val apiUrl="https://entreprise.data.gouv.fr/api/sirene/v1/full_text"
-    private val queryURL="$apiUrl/%s?page=1&per_page=10"
+    private var queryURL="$apiUrl/%s"
+    private val extendURL="?page=1&per_page=10"
+    private val codeURL="?code_postal=%s&"
+    private val departURL="?departement=%s&"
     private val context=context
 
-    fun getCompagny(query:String):Long{
+    fun getCompagny(query:String,code:String):Long{
         val db=SCDatabase.getDatabase(context)
         val searchDAO=db.searchDAO()
         val companyDAO=db.companyDAO()
@@ -26,9 +30,21 @@ class SearchService(context: Context) {
         val sdf = SimpleDateFormat("yyyy/MM/dd")
         val c = Calendar.getInstance()
         val date = sdf.format(c.time).toString()
-        val url= URL(String.format(queryURL,query))
-        println("searchdaoglanum")
-        println(searchDAO.getIdifalready(url.toString()))
+        when(code.length){
+            2->{
+                queryURL="$queryURL$departURL$extendURL"
+                val url= URL(String.format(queryURL,query,code))
+            }
+            5->{
+                queryURL="$queryURL$departURL$extendURL"
+                val url= URL(String.format(queryURL,query,code))
+            }
+            else->{
+                queryURL="$queryURL$extendURL"
+                val url= URL(String.format(queryURL,query))
+            }
+        }
+        val url= URL(String.format(queryURL,query,code))
         var ifalready=searchDAO.getIdifalready(url.toString())
         if(ifalready!=0.toLong())
         {
@@ -37,11 +53,10 @@ class SearchService(context: Context) {
         var conn:HttpsURLConnection?=null
         var nom=""
         var addr=""
-        var depart=0
+        var depart=""
         var activ=""
         var siret=""
         try {
-            println("entré dans apiglanu")
             conn=url.openConnection()as HttpsURLConnection
             conn.connect()
             val code=conn.responseCode
@@ -55,7 +70,6 @@ class SearchService(context: Context) {
             reader.beginObject()
             while (reader.hasNext()){
                 var firstsuivant=reader.nextName()
-                println(firstsuivant)
                 if (firstsuivant=="etablissement")
                 {
                     reader.beginArray()
@@ -65,25 +79,50 @@ class SearchService(context: Context) {
                         while (reader.hasNext())
                         {
                             when(reader.nextName()){
-                                "nom_raison_sociale"->nom=reader.nextString().toString()
-                                "geo_adresse"->addr=reader.nextString().toString()
-                              "departement"->{
-                                    if(reader.nextInt()!=null)
-                                    {
-                                        depart=reader.nextInt()
+                                "nom_raison_sociale"-> {
+                                    if (reader.peek() == JsonToken.NULL) {
+                                        reader.nextNull()
+                                        nom = "Nom non indiqué"
+                                    } else {
+                                        nom = reader.nextString()
                                     }
-                                    else
-                                    {
-                                        depart=0
-                                    }
-
                                 }
-                                "libelle_activite_principale"->activ=reader.nextString().toString()
-                                "siret"->siret=reader.nextString().toString()
+                                "geo_adresse"->{
+                                    if (reader.peek() == JsonToken.NULL)  {
+                                        reader.nextNull()
+                                        addr = "Adresse non indiquée"
+                                    }else{
+                                        addr = reader.nextString()
+                                    }
+                                }
+                              "departement"->
+                              {
+                                  if (reader.peek() == JsonToken.NULL)  {
+                                      reader.nextNull()
+                                      depart = "Département non indiqué"
+                                  }else{
+                                      depart= reader.nextString()
+                                  }
+                              }
+                                "libelle_activite_principale"->{
+                                    if (reader.peek() == JsonToken.NULL)  {
+                                        reader.nextNull()
+                                        activ = "Activité non indiqué"
+                                    }else{
+                                        activ = reader.nextString()
+                                    }
+                                }
+                                "siret"->{
+                                    if (reader.peek() == JsonToken.NULL)  {
+                                        reader.nextNull()
+                                        siret = "Siret non indiqué"
+                                    }else{
+                                        siret = reader.nextString()
+                                    }
+                                }
                                 else->reader.skipValue()
                             }
                         }
-                        println(Company(null,nom,depart,addr,activ,siret,date))
                         var result=companyDAO.getCompanybysiret(siret)
                         var idcompany=0.toLong()
                         if (result==0.toLong())

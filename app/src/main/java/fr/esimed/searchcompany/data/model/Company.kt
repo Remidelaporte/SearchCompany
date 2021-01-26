@@ -7,7 +7,7 @@ import java.io.Serializable
 @Entity(indices=[Index(value = ["id"],unique = true)])
 class Company(@PrimaryKey(autoGenerate = true)var id:Long?,
               var libelle:String,
-              var depart:Int,
+              var depart:String,
               var adress:String,
               var activity:String,
               var siret:String,
