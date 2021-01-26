@@ -22,7 +22,7 @@ class SearchService(context: Context) {
     private val departURL="?departement=%s&"
     private val context=context
 
-    fun getCompagny(query:String,code:String):Long{
+    fun getCompagny(query:String,codeint:String):Long{
         val db=SCDatabase.getDatabase(context)
         val searchDAO=db.searchDAO()
         val companyDAO=db.companyDAO()
@@ -30,21 +30,22 @@ class SearchService(context: Context) {
         val sdf = SimpleDateFormat("yyyy/MM/dd")
         val c = Calendar.getInstance()
         val date = sdf.format(c.time).toString()
-        when(code.length){
+
+        var url:URL
+        when(codeint.length){
             2->{
                 queryURL="$queryURL$departURL$extendURL"
-                val url= URL(String.format(queryURL,query,code))
+                url= URL(String.format(queryURL,query,codeint))
             }
             5->{
                 queryURL="$queryURL$departURL$extendURL"
-                val url= URL(String.format(queryURL,query,code))
+                url= URL(String.format(queryURL,query,codeint))
             }
             else->{
                 queryURL="$queryURL$extendURL"
-                val url= URL(String.format(queryURL,query))
+                url= URL(String.format(queryURL,query))
             }
         }
-        val url= URL(String.format(queryURL,query,code))
         var ifalready=searchDAO.getIdifalready(url.toString())
         if(ifalready!=0.toLong())
         {
@@ -66,7 +67,8 @@ class SearchService(context: Context) {
             }
             val inputStream=conn.inputStream?:return 0.toLong()
             val reader=JsonReader(inputStream.bufferedReader())
-            var idsearch=searchDAO.insert(Search(null,query,url.toString(),date))
+            val insertquery="$query-$codeint"
+            var idsearch=searchDAO.insert(Search(null,insertquery,url.toString(),date))
             reader.beginObject()
             while (reader.hasNext()){
                 var firstsuivant=reader.nextName()
