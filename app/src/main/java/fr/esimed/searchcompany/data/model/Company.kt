@@ -12,6 +12,8 @@ class Company(@PrimaryKey(autoGenerate = true)var id:Long?,
               var activity:String,
               var siret:String,
               var date:String,
+              var longitude:String,
+              var latitude:String,
               var archive:Boolean=false):Serializable {
 
     override fun equals(other: Any?): Boolean {

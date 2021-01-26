@@ -13,11 +13,20 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+    private val SAVEDIDSEARCH="idsearch"
+    private val savedidsearch=null
+    private var searchid:Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val db= SCDatabase.getDatabase(this@MainActivity)
         db.seed()
         setContentView(R.layout.activity_main)
+        //si jamais y a un idsearch dans les saveinstance on fait l'appel par search pour construire l'adapter
+        if(savedInstanceState!=null && savedInstanceState.containsKey(SAVEDIDSEARCH))
+        {
+            val sid=savedInstanceState.getLong(SAVEDIDSEARCH)
+            db.companyDAO().getCompanyfromsearch(sid)
+        }
         findViewById<ImageButton>(R.id.BTsearch).setOnClickListener {
             QueryTask().execute()
         }
@@ -31,6 +40,12 @@ class MainActivity : AppCompatActivity() {
         }
         archive()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(SAVEDIDSEARCH, savedidsearch)
+    }
+
     fun archive(){
         val sdf=SimpleDateFormat("yyyy/MM/dd")
         val c=Calendar.getInstance()
@@ -85,6 +100,7 @@ class MainActivity : AppCompatActivity() {
                 println(idSearch)
                 if(idSearch!=0.toLong())
                 {
+                    searchid=idSearch
                     liste=companyDAO.getCompanyfromsearch(idSearch)
                     println(liste)
                     listView.adapter=ArrayAdapter<Company>(

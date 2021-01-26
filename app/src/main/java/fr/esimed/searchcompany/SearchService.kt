@@ -57,6 +57,8 @@ class SearchService(context: Context) {
         var depart=""
         var activ=""
         var siret=""
+        var longitude=""
+        var lattitude=""
         try {
             conn=url.openConnection()as HttpsURLConnection
             conn.connect()
@@ -122,6 +124,22 @@ class SearchService(context: Context) {
                                         siret = reader.nextString()
                                     }
                                 }
+                                "longitude"->{
+                                    if (reader.peek() == JsonToken.NULL)  {
+                                        reader.nextNull()
+                                        longitude = "0.00000"
+                                    }else{
+                                        longitude = reader.nextString()
+                                    }
+                                }
+                                "latitude"->{
+                                    if (reader.peek() == JsonToken.NULL)  {
+                                        reader.nextNull()
+                                        lattitude = "0.00000"
+                                    }else{
+                                        lattitude = reader.nextString()
+                                    }
+                                }
                                 else->reader.skipValue()
                             }
                         }
@@ -129,7 +147,7 @@ class SearchService(context: Context) {
                         var idcompany=0.toLong()
                         if (result==0.toLong())
                         {
-                            idcompany=companyDAO.insert(Company(null,nom,depart,addr,activ,siret,date))
+                            idcompany=companyDAO.insert(Company(null,nom,depart,addr,activ,siret,date,longitude,lattitude))
                         }
                         else{
                             idcompany=result
