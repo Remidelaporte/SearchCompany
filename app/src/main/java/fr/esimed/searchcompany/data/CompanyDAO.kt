@@ -13,6 +13,9 @@ interface CompanyDAO {
     @Query("Select company.* from company where company.archive=0")
     fun getActivCompany():List<Company>
 
+    @Query("Select company.* from company where company.id=:id")
+    fun getCompanyfromid(id:Long):Company
+
     @Query("Update company set archive=1 where id=:id")
     fun archiveCompany(id:Long)
 

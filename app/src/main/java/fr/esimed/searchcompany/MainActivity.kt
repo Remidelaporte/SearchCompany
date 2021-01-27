@@ -10,6 +10,8 @@ import android.widget.*
 import fr.esimed.searchcompany.data.SCDatabase
 import fr.esimed.searchcompany.data.model.Company
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +27,10 @@ class MainActivity : AppCompatActivity() {
         if(savedInstanceState!=null && savedInstanceState.containsKey(SAVEDIDSEARCH))
         {
             val sid=savedInstanceState.getLong(SAVEDIDSEARCH)
-            db.companyDAO().getCompanyfromsearch(sid)
+            val liste=db.companyDAO().getCompanyfromsearch(sid)
+            findViewById<ListView>(R.id.LVcompanyList).adapter=ArrayAdapter<Company>(
+                    this@MainActivity,android.R.layout.simple_dropdown_item_1line,liste
+            )
         }
         findViewById<ImageButton>(R.id.BTsearch).setOnClickListener {
             QueryTask().execute()
@@ -43,29 +48,68 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putStringArrayList(SAVEDIDSEARCH, savedidsearch)
+        outState.putLong(SAVEDIDSEARCH, searchid)
     }
 
     fun archive(){
-        val sdf=SimpleDateFormat("yyyy/MM/dd")
-        val c=Calendar.getInstance()
-        val date=sdf.format(c.time)
         val db= SCDatabase.getDatabase(this)
         val searchDAO=db.searchDAO()
         val listSearch=searchDAO.getActivSearch()
         val companyDAO=db.companyDAO()
+        val kcsDAO=db.kcsDAO()
+
+        //date du jour
+        val sdf=SimpleDateFormat("yyyy/MM/dd")
+        val c=Calendar.getInstance()
+        val datetoday=sdf.format(c.time)
+        //ligne pour changer le string en date pour le comparer
+        val datetodaycompar = sdf.parse(datetoday)
+
+        //date de la veille
+        c.add(Calendar.DAY_OF_WEEK, -1);
+        val dateyesterday = c.getTime()
+        val dateyest = sdf.format(dateyesterday)
+        val dateyestcompar = sdf.parse(dateyest)
+
+
+        //date il y a trois mois
+        c.add(Calendar.MONTH, -3);
+        val datepasse = c.getTime()
+        val datepast = sdf.format(datepasse)
+        val datepastcompar = sdf.parse(datepast)
+
         for(i in listSearch)
         {
-            println("cherche i")
-            println(i.date)
-            if (i.date!=date)
+            val datesearch=sdf.parse(i.date)
+            if (datesearch<=datepastcompar)
             {
-                val listCompany=companyDAO.getCompanyfromsearch(i.id!!)
-                for (j in listCompany)
+                println("je delete")
+                val listcompagny=companyDAO.getCompanyfromsearch(i.id!!)
+                for(j in listcompagny)
                 {
-                    companyDAO.archiveCompany(j.id!!)
+                    println(j.toString())
+                   companyDAO.delete(j)
                 }
-                searchDAO.archiveSearch(i.id!!)
+                val listkey=kcsDAO.getKeyfromsearch(i.id!!)
+                for(k in listkey)
+                {
+                    println(k.toString())
+                    kcsDAO.delete(k)
+                }
+                println(i.toString())
+                searchDAO.delete(i)
+            }
+            else
+            {
+                if (datesearch<=dateyestcompar)
+                {
+                    val listCompany=companyDAO.getCompanyfromsearch(i.id!!)
+                    for (j in listCompany)
+                    {
+                        companyDAO.archiveCompany(j.id!!)
+                    }
+                    searchDAO.archiveSearch(i.id!!)
+                }
             }
         }
     }
