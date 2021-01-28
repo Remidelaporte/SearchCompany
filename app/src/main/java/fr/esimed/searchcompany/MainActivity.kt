@@ -4,11 +4,18 @@ import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.*
+import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
 import fr.esimed.searchcompany.data.SCDatabase
+import fr.esimed.searchcompany.data.model.CodeNAFAPE
 import fr.esimed.searchcompany.data.model.Company
+import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -43,6 +50,68 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("company",company)
             this.startActivity(intent)
         }
+
+        val ETnaf=findViewById<EditText>(R.id.ETNAF)
+        val ETactive=findViewById<EditText>(R.id.ETactivite)
+        val SPactive=findViewById<Spinner>(R.id.SPactive)
+        ETnaf.addTextChangedListener(object :TextWatcher{
+            var det="%${ETnaf.text}%"
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                ETactive.text.clear()
+                if (!s.toString().equals(det)) {
+                    if (s.toString().isNotEmpty()) {
+                        ETnaf.removeTextChangedListener(this)
+                        SPactive.visibility = View.VISIBLE
+                        det = "%${s.toString()}%"
+                        var listenaf = db.cdNDAO().getNAFLike(det)
+                        if (listenaf.count() > 0) {
+                            val adapter: ArrayAdapter<CodeNAFAPE> = ArrayAdapter(
+                                    applicationContext,
+                                    android.R.layout.simple_spinner_item,
+                                    listenaf
+                            )
+                            SPactive.adapter = adapter
+                        }
+                        ETnaf.addTextChangedListener(this)
+                    } else {
+                        SPactive.visibility = View.INVISIBLE
+                    }
+                }
+            }
+        })
+
+        ETactive.addTextChangedListener(object :TextWatcher{
+            var det="%${ETactive.text}%"
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                ETNAF.text.clear()
+                if (!s.toString().equals(det)) {
+                    if (s.toString().isNotEmpty()) {
+                        println("test3")
+                        ETactive.removeTextChangedListener(this)
+                        SPactive.visibility = View.VISIBLE
+                        det = "%${s.toString()}%"
+                        println(det)
+                        var listeactive = db.cdNDAO().getactiveLike(det)
+                        if (listeactive.count() > 0) {
+                            val adapter: ArrayAdapter<CodeNAFAPE> = ArrayAdapter(
+                                    applicationContext,
+                                    android.R.layout.simple_spinner_item,
+                                    listeactive
+                            )
+                            SPactive.adapter = adapter
+                        }
+                        ETactive.addTextChangedListener(this)
+                    } else {
+                        SPactive.visibility = View.INVISIBLE
+                    }
+                }
+            }
+        })
+
         archive()
     }
 
@@ -134,7 +203,15 @@ class MainActivity : AppCompatActivity() {
         val companyDAO=db.companyDAO()
         val kcsdao=db.kcsDAO()
         override fun doInBackground(vararg params: Void?): Boolean {
-            idSearch=searchservice.getCompagny(findViewById<EditText>(R.id.ETsearchName).text.toString(),findViewById<EditText>(R.id.ETcode).text.toString())
+            val spinner=findViewById<Spinner>(R.id.SPactive)
+            if (spinner.isNotEmpty())
+            {
+                idSearch=searchservice.getCompagny(findViewById<EditText>(R.id.ETsearchName).text.toString(),findViewById<EditText>(R.id.ETcode).text.toString(),spinner.selectedItem as CodeNAFAPE)
+            }
+            else
+            {
+                idSearch=searchservice.getCompagny(findViewById<EditText>(R.id.ETsearchName).text.toString(),findViewById<EditText>(R.id.ETcode).text.toString(),null)
+            }
             return true
         }
 

@@ -3,8 +3,10 @@ package fr.esimed.searchcompany
 import android.content.Context
 import android.util.JsonReader
 import android.util.JsonToken
+import android.widget.Spinner
 import fr.esimed.searchcompany.data.SCDatabase
 import fr.esimed.searchcompany.data.SearchDAO
+import fr.esimed.searchcompany.data.model.CodeNAFAPE
 import fr.esimed.searchcompany.data.model.Company
 import fr.esimed.searchcompany.data.model.KeyCompanySearch
 import fr.esimed.searchcompany.data.model.Search
@@ -20,9 +22,10 @@ class SearchService(context: Context) {
     private val extendURL="?page=1&per_page=10"
     private val codeURL="?code_postal=%s&"
     private val departURL="?departement=%s&"
+    private val activityURL="?activite_principale=%s&"
     private val context=context
 
-    fun getCompagny(query:String,codeint:String):Long{
+    fun getCompagny(query:String,codeint:String,spinner: CodeNAFAPE?):Long{
         val db=SCDatabase.getDatabase(context)
         val searchDAO=db.searchDAO()
         val companyDAO=db.companyDAO()
@@ -30,22 +33,24 @@ class SearchService(context: Context) {
         val sdf = SimpleDateFormat("yyyy/MM/dd")
         val c = Calendar.getInstance()
         val date = sdf.format(c.time).toString()
-
+        var urltemp=String.format("$queryURL",query)
         var url:URL
         when(codeint.length){
             2->{
-                queryURL="$queryURL$departURL$extendURL"
-                url= URL(String.format(queryURL,query,codeint))
+                urltemp="$urltemp$departURL"
+                urltemp=String.format(urltemp,codeint)
             }
             5->{
-                queryURL="$queryURL$departURL$extendURL"
-                url= URL(String.format(queryURL,query,codeint))
-            }
-            else->{
-                queryURL="$queryURL$extendURL"
-                url= URL(String.format(queryURL,query))
+                urltemp="$urltemp$codeURL"
+                urltemp=String.format(urltemp,codeint)
             }
         }
+        if (spinner!=null)
+        {
+            urltemp="$urltemp$activityURL"
+            urltemp=String.format(urltemp,spinner.CodeNAFAPE)
+        }
+        url=URL("$urltemp$extendURL")
         var ifalready=searchDAO.getIdifalready(url.toString())
         if(ifalready!=0.toLong())
         {
