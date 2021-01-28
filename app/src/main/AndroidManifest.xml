@@ -22,14 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ArchiveCompanyActivity" />
-        <activity android:name=".ArchiveActivity" />
+        <activity android:name=".ArchiveCompanyActivity"
+            android:label="Historique des entreprises de la recherche"/>
+        <activity android:name=".ArchiveActivity"
+            android:label="Historique des recherches"/>
         <activity
             android:name=".CompanyActivity"
             android:label="company" />
         <activity
             android:name=".MainActivity"
-            android:label="Search">
+            android:label="Lancer la recherche">
         </activity>
 
         <meta-data

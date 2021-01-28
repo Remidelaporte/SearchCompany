@@ -18,13 +18,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="30sp"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/TVCompanysiret"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingStart="25dp"
             android:text="TextView" />
 
         <TextView
@@ -32,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingStart="25dp"
             android:text="TextView" />
 
         <TextView
@@ -39,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingStart="25dp"
             android:text="TextView" />
 
         <TextView
@@ -46,6 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingStart="25dp"
             android:text="TextView" />
 
     </LinearLayout>

@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import android.widget.Toast.LENGTH_LONG
 import androidx.core.view.isEmpty
 import androidx.core.view.isNotEmpty
 import fr.esimed.searchcompany.data.SCDatabase
@@ -218,15 +219,17 @@ class MainActivity : AppCompatActivity() {
         override fun onPostExecute(result: Boolean?) {
             if(result!=null)
             {
-                println(idSearch)
                 if(idSearch!=0.toLong())
                 {
                     searchid=idSearch
                     liste=companyDAO.getCompanyfromsearch(idSearch)
-                    println(liste)
                     listView.adapter=ArrayAdapter<Company>(
                         this@MainActivity,android.R.layout.simple_dropdown_item_1line,liste
                     )
+                }
+                else
+                {
+                    Toast.makeText(this@MainActivity,"Aucun résultat pour cette recherche",LENGTH_LONG).show()
                 }
             }
         }

@@ -33,16 +33,19 @@ class SearchService(context: Context) {
         val sdf = SimpleDateFormat("yyyy/MM/dd")
         val c = Calendar.getInstance()
         val date = sdf.format(c.time).toString()
+        var insertquery=query
         var urltemp=String.format("$queryURL",query)
         var url:URL
         when(codeint.length){
             2->{
                 urltemp="$urltemp$departURL"
                 urltemp=String.format(urltemp,codeint)
+                insertquery="$insertquery - $codeint"
             }
             5->{
                 urltemp="$urltemp$codeURL"
                 urltemp=String.format(urltemp,codeint)
+                insertquery="$insertquery - $codeint"
             }
         }
         if (spinner!=null)
@@ -74,7 +77,6 @@ class SearchService(context: Context) {
             }
             val inputStream=conn.inputStream?:return 0.toLong()
             val reader=JsonReader(inputStream.bufferedReader())
-            val insertquery="$query-$codeint"
             var idsearch=searchDAO.insert(Search(null,insertquery,url.toString(),date))
             reader.beginObject()
             while (reader.hasNext()){

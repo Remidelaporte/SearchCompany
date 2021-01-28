@@ -17,6 +17,7 @@ class CompanyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_company)
+        supportActionBar!!.hide()
         var company:Company
         if (savedInstanceState!=null && savedInstanceState.containsKey(SAVEDIDCOMPANY))
         {
@@ -32,13 +33,13 @@ class CompanyActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.TVCompanyLibelle).setText(company.libelle.toString())
 
-        findViewById<TextView>(R.id.TVCompanydepart).setText(company.depart.toString())
+        findViewById<TextView>(R.id.TVCompanydepart).setText(String.format("Département : %s",company.depart.toString()))
 
-        findViewById<TextView>(R.id.TVCompanyadress).setText(company.adress.toString())
+        findViewById<TextView>(R.id.TVCompanyadress).setText(String.format("Adresse : %s", company.adress.toString()))
 
-        findViewById<TextView>(R.id.TVCompanyactivity).setText(company.activity.toString())
+        findViewById<TextView>(R.id.TVCompanyactivity).setText(String.format("Activité de l'entreprise : %s",company.activity.toString()))
 
-        findViewById<TextView>(R.id.TVCompanysiret).setText(company.siret.toString())
+        findViewById<TextView>(R.id.TVCompanysiret).setText(String.format("N° de siret : %s",company.siret.toString()))
         var mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(OnMapReadyCallback {
             var googleMap = it

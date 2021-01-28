@@ -14,6 +14,7 @@ class ArchiveCompanyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_archive_company)
         val search=intent.getSerializableExtra("search") as Search
+        supportActionBar!!.setTitle(String.format("Resultat(s) de \" %s \"",search.toString()))
         val db=SCDatabase.getDatabase(this)
         val companyDAO=db.companyDAO()
         val listCompany=companyDAO.getCompanyfromsearch(search.id!!)

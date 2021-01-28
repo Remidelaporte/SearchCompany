@@ -20,7 +20,7 @@ abstract class SCDatabase: RoomDatabase() {
     abstract fun cdNDAO():CodeNafDAO
 
     fun seed(){
-        val searchDao=searchDAO()
+        /*val searchDao=searchDAO()
         if (searchDao.count()==0)
         {
             cdNDAO().insert(CodeNAFAPE("00000","n","nul","nul"))
@@ -39,7 +39,7 @@ abstract class SCDatabase: RoomDatabase() {
             KCSDao.insert(KeyCompanySearch(3.toLong(),3.toLong()))
             KCSDao.insert(KeyCompanySearch(3.toLong(),4.toLong()))
         }
-
+        */
     }
 
     companion object{

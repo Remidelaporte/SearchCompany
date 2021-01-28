@@ -40,17 +40,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="text"
-                android:hint="Code postal ou département"/>
+                android:hint="Code postal ou département"
+                android:inputType="text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/ETNAF"
-                android:layout_width="wrap_content"
+                android:layout_width="59dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="CodeNaf" />
+                android:hint="CodeNaf"
+                android:inputType="textPersonName" />
 
             <EditText
                 android:id="@+id/ETactivite"
@@ -58,8 +65,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Activité" />
+                android:hint="Activité"
+                android:inputType="textPersonName" />
         </LinearLayout>
 
         <LinearLayout

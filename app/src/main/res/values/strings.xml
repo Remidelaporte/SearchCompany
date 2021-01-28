@@ -3,4 +3,6 @@
     <string name="ETsearchhint">Nom de la compagnie</string>
     <string name="BTsearch">Rechercher</string>
     <string name="archive">Archive</string>
+    <string name="launchertitre">Gold Emploi</string>
+    <string name="launchercopyright">conçu par Delaporte Rémi pour Esimed</string>
 </resources>
