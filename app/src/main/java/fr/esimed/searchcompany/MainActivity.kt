@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                         ETnaf.addTextChangedListener(this)
                     } else {
                         SPactive.visibility = View.INVISIBLE
+                        SPactive.adapter=null
                     }
                 }
             }
@@ -108,6 +109,7 @@ class MainActivity : AppCompatActivity() {
                         ETactive.addTextChangedListener(this)
                     } else {
                         SPactive.visibility = View.INVISIBLE
+                        SPactive.adapter=null
                     }
                 }
             }

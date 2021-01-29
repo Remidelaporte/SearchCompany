@@ -52,6 +52,8 @@ class SearchService(context: Context) {
         {
             urltemp="$urltemp$activityURL"
             urltemp=String.format(urltemp,spinner.CodeNAFAPE)
+            val spactiv=spinner.Description
+            insertquery="$insertquery - $spactiv"
         }
         url=URL("$urltemp$extendURL")
         var ifalready=searchDAO.getIdifalready(url.toString())
@@ -68,6 +70,7 @@ class SearchService(context: Context) {
         var longitude=""
         var lattitude=""
         try {
+            println(url)
             conn=url.openConnection()as HttpsURLConnection
             conn.connect()
             val code=conn.responseCode
